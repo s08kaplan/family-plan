@@ -84,7 +84,7 @@ export const updateUserById = async (
   }
 }
 
-export const deleteUser = async (userId: string): Promise<ApiResponse<null>> => {
+export const deleteUserById = async (userId: string): Promise<ApiResponse<null>> => {
   try {
     await db.delete(users).where(eq(users.id, userId))
     return { success: true, message: "User deleted successfully" }
