@@ -1,29 +1,29 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator"
 import {
-    createUserSchema,
-    updateUserSchema,
-    getUserByIdSchema,
-    type CreateUserRequest,
-    type UpdateUserRequest,
-    type GetUserByIdRequest
-} from "../validation/user.js"
+    createBooksForKidsSchema,
+    updateBooksForKidsSchema,
+    getBookByIdSchema,
+    type CreateBookRequest,
+    type UpdateBookRequest,
+    type GetBookByIdRequest
+} from "../validation/kids-books.js"
 import type { ApiResponse } from "../types/api-response.js";
-import type { User } from "../types/types.js";
-import * as userController from "../controller/user.js"
+import type { BooksForKids } from "../types/types.js";
+import * as kidsBooksController from "../controller/books-for-kids.js"
 
 
-const userRouter = new Hono()
+const kidsBooksRouter = new Hono()
 
 
-userRouter.post(
-  "/users",
-  zValidator("json", createUserSchema),
+kidsBooksRouter.post(
+  "/books-for-kids",
+  zValidator("json", createBooksForKidsSchema),
   async (c) => {
     try {
-      const data = c.req.valid("json") as CreateUserRequest
-      const result = await userController.createUser(data)
-      return c.json(result as ApiResponse<User>, result.success ? 201 : 400)
+      const data = c.req.valid("json") as CreateBookRequest
+      const result = await kidsBooksController.createBook(data)
+      return c.json(result as ApiResponse<BooksForKids>, result.success ? 201 : 400)
     } catch (error) {
       return c.json(
         {
@@ -37,10 +37,10 @@ userRouter.post(
 )
 
 
-userRouter.get("/users", async (c) => {
+kidsBooksRouter.get("/books-for-kids", async (c) => {
   try {
-    const result = await userController.getAllUsers()
-    return c.json(result as ApiResponse<User[]>)
+    const result = await kidsBooksController.getAllBooks()
+    return c.json(result as ApiResponse<BooksForKids[]>)
   } catch (error) {
     return c.json(
       {
@@ -53,14 +53,14 @@ userRouter.get("/users", async (c) => {
 })
 
 
-userRouter.get(
-  "/:userId",
-  zValidator("param", getUserByIdSchema),
+kidsBooksRouter.get(
+  "/:bookId",
+  zValidator("param", getBookByIdSchema),
   async (c) => {
     try {
-      const { userId } = c.req.valid("param") as GetUserByIdRequest
-      const result = await userController.getUserById(userId)
-      return c.json(result as ApiResponse<User>, result.success ? 200 : 404)
+      const { bookId } = c.req.valid("param") as GetBookByIdRequest
+      const result = await kidsBooksController.getBookById(bookId)
+      return c.json(result as ApiResponse<BooksForKids>, result.success ? 200 : 404)
     } catch (error) {
       return c.json(
         {
@@ -73,16 +73,16 @@ userRouter.get(
   }
 )
 
-userRouter.put(
-  "/:userId",
-  zValidator("param", getUserByIdSchema),
-  zValidator("json", updateUserSchema),
+kidsBooksRouter.put(
+  "/:bookId",
+  zValidator("param", getBookByIdSchema),
+  zValidator("json", updateBooksForKidsSchema),
   async (c) => {
     try {
-      const { userId } = c.req.valid("param") as GetUserByIdRequest
-      const data = c.req.valid("json") as UpdateUserRequest
-      const result = await userController.updateUserById(userId, data)
-      return c.json(result as ApiResponse<User>, result.success ? 200 : 404)
+      const { bookId } = c.req.valid("param") as GetBookByIdRequest
+      const data = c.req.valid("json") as UpdateBookRequest
+      const result = await kidsBooksController.updateBookById(bookId, data)
+      return c.json(result as ApiResponse<BooksForKids>, result.success ? 200 : 404)
     } catch (error) {
       return c.json(
         {
@@ -95,13 +95,13 @@ userRouter.put(
   }
 )
 
-userRouter.delete(
-  "/:userId",
-  zValidator("param", getUserByIdSchema),
+kidsBooksRouter.delete(
+  "/:bookId",
+  zValidator("param", getBookByIdSchema),
   async (c) => {
     try {
-      const { userId } = c.req.valid("param") as GetUserByIdRequest
-      const result = await userController.deleteUserById(userId)
+      const { bookId } = c.req.valid("param") as GetBookByIdRequest
+      const result = await kidsBooksController.deleteBookById(bookId)
       return c.json(result as ApiResponse<null>, result.success ? 200 : 404)
     } catch (error) {
       return c.json(
@@ -115,4 +115,4 @@ userRouter.delete(
   }
 )
 
-export default userRouter
+export default kidsBooksRouter
