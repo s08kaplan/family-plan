@@ -9,3 +9,11 @@ export const createGamesSchema = z.object({
 }).extend(createTimestampsSchema)
 
 export const updateGamesSchema = createGamesSchema.partial()
+
+export const getGameByIdSchema = z.object({
+        gameId: z.uuid()
+})
+
+export type CreateGameRequest = z.infer<typeof createGamesSchema>
+export type UpdateGameRequest = z.infer<typeof updateGamesSchema>
+export type GetGameByIdRequest = z.infer<typeof getGameByIdSchema>
