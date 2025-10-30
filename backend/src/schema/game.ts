@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from "../helpers/timestamps.js";
 
 export const games = pgTable("games", {
@@ -6,6 +6,6 @@ export const games = pgTable("games", {
     name: text("name").notNull(),
     target: text("target"),
     description: text("description").notNull(),
-    appropriateAge: text("appropriate_age"),
+    appropriateAge: integer().default(0),
     ...timestamps
 })
